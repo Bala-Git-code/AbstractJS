@@ -12,7 +12,7 @@ clear visual hierarchy, and minimal UI noise. Interactive elements such as input
 and textareas inside nodes are styled using shared utility classes to maintain
 consistency without introducing unnecessary global styling changes.
 
-## Part 3: Text Node Logic
+## Text Node Logic
 
 The Text node was enhanced to improve usability and better reflect real-world
 pipeline behavior.
@@ -31,3 +31,29 @@ The Text node supports variable definitions using double curly braces
 
 This behavior allows the Text node to declare dependencies on upstream nodes,
 similar to how variables work in the VectorShift platform.
+
+### Backend Integration 
+
+A simple integration was implemented between the ReactFlow frontend and a
+FastAPI backend to analyze pipeline structure.
+
+### Frontend → Backend Communication
+When the user clicks the **Submit** button, the frontend sends the current
+pipeline's nodes and edges to the backend endpoint
+`/pipelines/parse` as a JSON payload.
+
+### Backend Processing
+The FastAPI backend:
+- Counts the total number of nodes and edges in the pipeline
+- Constructs a directed graph from the edges
+- Checks whether the graph is a Directed Acyclic Graph (DAG) using
+  depth-first search cycle detection
+
+### Response & User Feedback
+The backend responds with:
+```json
+{
+  "num_nodes": int,
+  "num_edges": int,
+  "is_dag": bool
+}
