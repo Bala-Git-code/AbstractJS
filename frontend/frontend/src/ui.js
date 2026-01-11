@@ -16,9 +16,9 @@ import 'reactflow/dist/style.css';
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
 const nodeTypes = {
-  customInput: InputNode,
+  input: InputNode,
   llm: LLMNode,
-  customOutput: OutputNode,
+  output: OutputNode,
   text: TextNode,
 };
 
@@ -90,7 +90,7 @@ export const PipelineUI = () => {
 
     return (
         <>
-        <div ref={reactFlowWrapper} style={{width: '100wv', height: '70vh'}}>
+        <div ref={reactFlowWrapper} className="w-screen" style={{height: '70vh'}}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -104,8 +104,12 @@ export const PipelineUI = () => {
                 proOptions={proOptions}
                 snapGrid={[gridSize, gridSize]}
                 connectionLineType='smoothstep'
+                defaultEdgeOptions={{
+                  strokeWidth: 2.5,
+                  stroke: '#0ea5e9',
+                }}
             >
-                <Background color="#aaa" gap={gridSize} />
+                <Background color="#1e293b" gap={gridSize} />
                 <Controls />
                 <MiniMap />
             </ReactFlow>

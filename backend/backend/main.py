@@ -1,7 +1,17 @@
 from fastapi import FastAPI
-from typing import Dict, List
+from fastapi.middleware.cors import CORSMiddleware
+from typing import Dict
 
 app = FastAPI()
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],          
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/pipelines/parse")
 def parse_pipeline(data: Dict):
@@ -11,7 +21,7 @@ def parse_pipeline(data: Dict):
     num_nodes = len(nodes)
     num_edges = len(edges)
 
-    # Build graph
+    # Build adjacency list
     graph = {}
     for edge in edges:
         src = edge["source"]

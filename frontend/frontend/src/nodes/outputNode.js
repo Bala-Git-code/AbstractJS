@@ -7,33 +7,35 @@ export const OutputNode = ({ id, data, selected }) => {
   const [outputType, setOutputType] = useState(data.outputType || 'Text');
 
   return (
-    <BaseNode label="Output" selected={selected}>
+    <div>
       <Handle 
         type="target" 
         position={Position.Left} 
         id={`${id}-value`} 
-        className="w-2 h-2 !bg-slate-500 border-2 border-slate-900" 
+        className="w-3 h-3 !bg-purple-500 border-2 border-purple-700 !top-1/2 hover:!bg-purple-400 hover:!shadow-lg hover:!shadow-purple-500/50 transition-all" 
       />
-      <div>
-        <label className={nodeLabelStyles}>Name</label>
-        <input 
-          type="text" 
-          className={nodeInputStyles} 
-          value={currName} 
-          onChange={(e) => setCurrName(e.target.value)} 
-        />
-      </div>
-      <div>
-        <label className={nodeLabelStyles}>Type</label>
-        <select 
-          className={nodeInputStyles} 
-          value={outputType} 
-          onChange={(e) => setOutputType(e.target.value)}
-        >
-          <option value="Text">Text</option>
-          <option value="File">Image</option>
-        </select>
-      </div>
-    </BaseNode>
+      <BaseNode label="Output" selected={selected}>
+        <div>
+          <label className={nodeLabelStyles}>Name</label>
+          <input 
+            type="text" 
+            className={nodeInputStyles} 
+            value={currName} 
+            onChange={(e) => setCurrName(e.target.value)} 
+          />
+        </div>
+        <div>
+          <label className={nodeLabelStyles}>Type</label>
+          <select 
+            className={nodeInputStyles} 
+            value={outputType} 
+            onChange={(e) => setOutputType(e.target.value)}
+          >
+            <option value="Text">Text</option>
+            <option value="File">Image</option>
+          </select>
+        </div>
+      </BaseNode>
+    </div>
   );
 }

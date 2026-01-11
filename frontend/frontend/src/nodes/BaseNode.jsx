@@ -1,13 +1,13 @@
 
 import { twMerge } from 'tailwind-merge';
-import {clsx}   from "clsx";
+
 
 export const nodeInputStyles = "w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200 focus:outline-none focus:border-blue-500/50 nodrag";
 export const nodeLabelStyles = "block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1";
 
 export const BaseNode = ({ label, children, selected }) => (
   <div className={twMerge(
-    "flex flex-col min-w-[200px] bg-slate-900 border rounded-lg shadow-xl overflow-visible transition-all",
+    "relative flex flex-col min-w-[200px] bg-slate-900 border rounded-lg shadow-xl transition-all",
     selected ? "border-blue-500 ring-1 ring-blue-500/20" : "border-slate-700"
   )}>
     {/* Header */}
