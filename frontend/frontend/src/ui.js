@@ -33,87 +33,94 @@ const selector = (state) => ({
 });
 
 export const PipelineUI = () => {
-    const reactFlowWrapper = useRef(null);
-    const [reactFlowInstance, setReactFlowInstance] = useState(null);
-    const {
-      nodes,
-      edges,
-      getNodeID,
-      addNode,
-      onNodesChange,
-      onEdgesChange,
-      onConnect
-    } = useStore(selector, shallow);
+  const reactFlowWrapper = useRef(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const {
+    nodes,
+    edges,
+    getNodeID,
+    addNode,
+    onNodesChange,
+    onEdgesChange,
+    onConnect
+  } = useStore(selector, shallow);
 
-    const getInitNodeData = (nodeID, type) => {
-      let nodeData = { id: nodeID, nodeType: `${type}` };
-      return nodeData;
-    }
+  const getInitNodeData = (nodeID, type) => {
+    let nodeData = { id: nodeID, nodeType: `${type}` };
+    return nodeData;
+  }
 
-    const onDrop = useCallback(
-        (event) => {
-          event.preventDefault();
-    
-          const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-          if (event?.dataTransfer?.getData('application/reactflow')) {
-            const appData = JSON.parse(event.dataTransfer.getData('application/reactflow'));
-            const type = appData?.nodeType;
-      
-            // check if the dropped element is valid
-            if (typeof type === 'undefined' || !type) {
-              return;
-            }
-      
-            const position = reactFlowInstance.project({
-              x: event.clientX - reactFlowBounds.left,
-              y: event.clientY - reactFlowBounds.top,
-            });
+  const onDrop = useCallback(
+    (event) => {
+      event.preventDefault();
 
-            const nodeID = getNodeID(type);
-            const newNode = {
-              id: nodeID,
-              type,
-              position,
-              data: getInitNodeData(nodeID, type),
-            };
-      
-            addNode(newNode);
-          }
-        },
-        [reactFlowInstance]
-    );
+      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+      if (event?.dataTransfer?.getData('application/reactflow')) {
+        const appData = JSON.parse(event.dataTransfer.getData('application/reactflow'));
+        const type = appData?.nodeType;
 
-    const onDragOver = useCallback((event) => {
-        event.preventDefault();
-        event.dataTransfer.dropEffect = 'move';
-    }, []);
+        // check if the dropped element is valid
+        if (typeof type === 'undefined' || !type) {
+          return;
+        }
 
-    return (
-        <>
-        <div ref={reactFlowWrapper} className="w-screen" style={{height: '70vh'}}>
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
-                onDrop={onDrop}
-                onDragOver={onDragOver}
-                onInit={setReactFlowInstance}
-                nodeTypes={nodeTypes}
-                proOptions={proOptions}
-                snapGrid={[gridSize, gridSize]}
-                connectionLineType='smoothstep'
-                defaultEdgeOptions={{
-                  strokeWidth: 2.5,
-                  stroke: '#0ea5e9',
-                }}
-            >
-                <Background color="#1e293b" gap={gridSize} />
-                <Controls />
-                <MiniMap />
-            </ReactFlow>
-        </div>
-        </>
-    )
+        const position = reactFlowInstance.project({
+          x: event.clientX - reactFlowBounds.left,
+          y: event.clientY - reactFlowBounds.top,
+        });
+
+        const nodeID = getNodeID(type);
+        const newNode = {
+          id: nodeID,
+          type,
+          position,
+          data: getInitNodeData(nodeID, type),
+        };
+
+        addNode(newNode);
+      }
+    },
+    [reactFlowInstance]
+  );
+
+  const onDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+
+  return (
+    <>
+      <div ref={reactFlowWrapper} className="w-screen" style={{ height: '70vh' }}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          onInit={setReactFlowInstance}
+          nodeTypes={nodeTypes}
+          proOptions={proOptions}
+          snapGrid={[gridSize, gridSize]}
+          connectionLineType='smoothstep'
+          defaultEdgeOptions={{
+            strokeWidth: 2,
+            stroke: '#00ff9c',
+            animated: true,
+            markerEnd: {
+              type: 'arrowclosed',
+              width: 20,
+              height: 20,
+              color: '#00ff9c',
+            },
+          }}
+        >
+          <Background color="#2a2a2a" gap={gridSize} size={1} />
+          <Controls />
+          <MiniMap style={{ height: 120, borderRadius: 8 }} zoomable pannable />
+        </ReactFlow>
+      </div>
+    </>
+  )
 }

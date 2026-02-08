@@ -24,26 +24,47 @@ export const SubmitButton = () => {
         `Is DAG: ${result.is_dag ? 'Yes' : 'No'}`
       );
     } catch (error) {
-      alert('❌ Failed to analyze pipeline');
+      alert('❌ Failed to analyze pipeline. Ensure backend is running.');
       console.error(error);
     }
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '20px' }}>
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: '20px',
+      borderTop: '1px solid #2a2a2a',
+      backgroundColor: '#121212'
+    }}>
       <button
         onClick={handleSubmit}
         style={{
-          padding: '10px 20px',
-          fontSize: '16px',
+          padding: '12px 24px',
+          fontSize: '14px',
           fontWeight: 'bold',
-          borderRadius: '8px',
-          backgroundColor: '#1e293b',
-          color: 'white',
+          borderRadius: '4px',
+          backgroundColor: '#00ff9c',
+          color: '#0b0b0b',
+          border: 'none',
           cursor: 'pointer',
+          textTransform: 'uppercase',
+          boxShadow: '0 0 10px rgba(0, 255, 156, 0.5)',
+          transition: 'all 0.3s ease'
+        }}
+        onMouseOver={(e) => {
+          e.target.style.backgroundColor = '#0b0b0b';
+          e.target.style.color = '#00ff9c';
+          e.target.style.border = '1px solid #00ff9c';
+        }}
+        onMouseOut={(e) => {
+          e.target.style.backgroundColor = '#00ff9c';
+          e.target.style.color = '#0b0b0b';
+          e.target.style.border = 'none';
         }}
       >
-        Submit
+        Submit Pipeline
       </button>
     </div>
   );

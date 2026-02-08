@@ -10,19 +10,11 @@ export const InputNode = ({ id, data, selected }) => {
 
   return (
     <BaseNode label="Input" selected={selected}>
-      {/* Moving the Handle here ensures it calculates its 'right' 
-          position relative to the BaseNode container. 
-      */}
       <Handle
         type="source"
         position={Position.Right}
         id={`${id}-value`}
-        style={{ 
-          top: '50%', 
-          transform: 'translateY(-50%)',
-          right: '-6px' // This ensures the circle sits exactly on the edge
-        }}
-        className="w-3 h-3 !bg-blue-500 border-2 border-blue-700"
+        style={{ top: '50%', right: '-5px' }}
       />
 
       <div>
