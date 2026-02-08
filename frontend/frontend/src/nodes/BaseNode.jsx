@@ -1,22 +1,36 @@
 
-import { twMerge } from 'tailwind-merge';
+// BaseNode.jsx
 
-
-export const nodeInputStyles = "w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200 focus:outline-none focus:border-blue-500/50 nodrag";
-export const nodeLabelStyles = "block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1";
+export const nodeInputStyles = "w-full bg-[#0b0b0b] border border-[#2a2a2a] rounded-[4px] px-2 py-1 text-xs text-[#e6e6e6] focus:outline-none focus:border-[#00ff9c] nodrag placeholder-gray-600 transition-colors";
+export const nodeLabelStyles = "block text-[10px] font-bold text-[#00ff9c] uppercase tracking-wider mb-1";
 
 export const BaseNode = ({ label, children, selected }) => (
-  <div className={twMerge(
-    "relative flex flex-col min-w-[200px] bg-slate-900 border rounded-lg shadow-xl transition-all",
-    selected ? "border-blue-500 ring-1 ring-blue-500/20" : "border-slate-700"
-  )}>
+  <div
+    style={{
+      backgroundColor: '#121212',
+      border: selected ? '1px solid #00ff9c' : '1px solid #2a2a2a',
+      borderRadius: '4px',
+      minWidth: '200px',
+      boxShadow: selected ? '0 0 10px rgba(0, 255, 156, 0.3)' : '0 4px 6px rgba(0, 0, 0, 0.3)',
+      transition: 'all 0.2s ease'
+    }}
+  >
     {/* Header */}
-    <div className="px-3 py-2 bg-slate-800/50 border-b border-slate-700 rounded-t-lg">
-      <span className="text-[11px] font-bold text-slate-300 uppercase tracking-tight">{label}</span>
+    <div style={{
+      padding: '8px 12px',
+      backgroundColor: '#0b0b0b',
+      borderBottom: '1px solid #2a2a2a',
+      borderTopLeftRadius: '4px',
+      borderTopRightRadius: '4px',
+      display: 'flex',
+      alignItems: 'center'
+    }}>
+      <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#ff0055', marginRight: '8px' }}></div>
+      <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#e6e6e6', textTransform: 'uppercase' }}>{label}</span>
     </div>
-    
+
     {/* Body */}
-    <div className="p-3 flex flex-col gap-3">
+    <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {children}
     </div>
   </div>

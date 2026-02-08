@@ -1,19 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Override ReactFlow default node styling */
+:root {
+  --retro-bg: #0b0b0b;
+  --retro-panel: #121212;
+  --retro-border: #2a2a2a;
+  --retro-accent: #00ff9c;
+  --retro-secondary: #ff0055;
+  --retro-text: #e6e6e6;
+}
+
+body {
+  background-color: var(--retro-bg);
+  color: var(--retro-text);
+  font-family: 'Space Mono', monospace;
+}
+
+/* ReactFlow Overrides */
 .react-flow__node {
   background: transparent !important;
   border: none !important;
   padding: 0 !important;
+  width: auto !important;
 }
 
-.react-flow__node-input,
-.react-flow__node-output,
-.react-flow__node-llm,
-.react-flow__node-text {
-  background: transparent !important;
-  border: none !important;
-  padding: 0 !important;
+/* Connectors */
+.react-flow__handle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  /* Circle handles */
+  background: var(--retro-bg);
+  border: 1px solid var(--retro-border);
+  transition: all 0.2s;
+}
+
+.react-flow__handle.source {
+  border-color: var(--retro-accent);
+}
+
+.react-flow__handle.target {
+  border-color: var(--retro-secondary);
+}
+
+.react-flow__handle:hover {
+  background: var(--retro-border);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.react-flow__handle.source:hover {
+  background: var(--retro-accent);
+  box-shadow: 0 0 10px var(--retro-accent);
+}
+
+.react-flow__handle.target:hover {
+  background: var(--retro-secondary);
+  box-shadow: 0 0 10px var(--retro-secondary);
+}
+
+/* Controls */
+.react-flow__controls {
+  box-shadow: none !important;
+  border: 1px solid var(--retro-border);
+  background: var(--retro-panel);
+}
+
+.react-flow__controls-button {
+  background: var(--retro-panel) !important;
+  border-bottom: 1px solid var(--retro-border) !important;
+  fill: var(--retro-text) !important;
+}
+
+.react-flow__controls-button:hover {
+  background: var(--retro-border) !important;
+  fill: var(--retro-accent) !important;
+}
+
+/* Minimap */
+.react-flow__minimap {
+  background: var(--retro-panel) !important;
+  border: 1px solid var(--retro-border);
+}
+
+.react-flow__minimap-mask {
+  fill: var(--retro-border) !important;
+  opacity: 0.4;
+}
+
+.react-flow__minimap-node {
+  fill: var(--retro-border) !important;
+  stroke: none !important;
 }
