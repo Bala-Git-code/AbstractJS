@@ -1,59 +1,145 @@
-### Node Abstraction :
+# AbstractJS
 
-All nodes are built using a shared BaseNode component that handles layout, styling, and handle generation. New nodes can be created declaratively by passing input/output configurations and custom content, reducing duplication and improving scalability.
+AbstractJS is a production-oriented AI workflow platform with a React/Vite client, an Express/MongoDB server, and a workflow execution engine built around directed acyclic graphs.
 
-## Styling
+## Final Structure
 
-Node styling is centralized within a reusable `BaseNode` component to ensure a
-clean, consistent, and unified appearance across all node types.
+```text
+project-root/
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── features/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── store/
+│   │   └── utils/
+│   ├── package.json
+│   └── vite.config.js
+├── server/
+│   ├── config/
+│   ├── controllers/
+│   ├── engine/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── services/
+│   ├── utils/
+│   ├── package.json
+│   └── server.js
+├── shared/
+│   └── constants.js
+├── .env.example
+└── README.md
+```
 
-A subtle dark theme was implemented using Tailwind CSS, focusing on readability,
-clear visual hierarchy, and minimal UI noise. Interactive elements such as inputs
-and textareas inside nodes are styled using shared utility classes to maintain
-consistency without introducing unnecessary global styling changes.
+## Core Capabilities
 
-## Text Node Logic
+- Create workflows visually with `INPUT`, `TRANSFORM`, `AI`, and `OUTPUT` nodes
+- Connect nodes into a DAG using React Flow
+- Save workflows to MongoDB
+- Execute workflows through a decoupled workflow engine
+- Call OpenAI dynamically from AI nodes
+- Inspect execution status, logs, runtime, and structured results
+- Extend execution later with a queue system without rewriting the engine
 
-The Text node was enhanced to improve usability and better reflect real-world
-pipeline behavior.
+## Backend Design
 
-### Auto-Resizing Text Input
-The text input dynamically adjusts its height as the user types, ensuring that
-all content remains visible without requiring scrollbars. As the textarea grows,
-the node itself expands automatically.
+- `server/models/Workflow.js`
+  Stores workflow metadata, nodes, and edges.
+- `server/models/Execution.js`
+  Stores execution state, logs, result payload, and timing.
+- `server/engine/workflowEngine.js`
+  Validates DAG order, runs nodes asynchronously, isolates node failures, and captures logs.
+- `server/services/aiService.js`
+  Wraps OpenAI calls with retries and structured JSON responses.
+- `server/routes/*`
+  Exposes REST APIs for workflow CRUD and execution runs.
 
-### Dynamic Variable Handles
-The Text node supports variable definitions using double curly braces
-(e.g., `{{input}}`). When such variables are detected:
-- Each unique variable creates a corresponding input Handle on the left side
-- Handles are added or removed dynamically as variables change
-- Only valid JavaScript variable names are supported
+### API Endpoints
 
-This behavior allows the Text node to declare dependencies on upstream nodes,
-similar to how variables work in the VectorShift platform.
+- `POST /workflows`
+- `GET /workflows`
+- `GET /workflows/:id`
+- `PUT /workflows/:id`
+- `DELETE /workflows/:id`
+- `POST /execution/run`
+- `GET /execution/:id`
+- `GET /health`
 
-### Backend Integration 
+## Frontend Design
 
-A simple integration was implemented between the ReactFlow frontend and a
-FastAPI backend to analyze pipeline structure.
+- Dashboard for workflow discovery and deletion
+- Builder for graph editing, property inspection, save, and run
+- Execution viewer for status, logs, and final output
+- Dedicated API service layer
+- Zustand-backed builder state
 
-### Frontend → Backend Communication
-When the user clicks the **Submit** button, the frontend sends the current
-pipeline's nodes and edges to the backend endpoint
-`/pipelines/parse` as a JSON payload.
+## Environment Variables
 
-### Backend Processing
-The FastAPI backend:
-- Counts the total number of nodes and edges in the pipeline
-- Constructs a directed graph from the edges
-- Checks whether the graph is a Directed Acyclic Graph (DAG) using
-  depth-first search cycle detection
+Copy `.env.example` to `.env` and set:
 
-### Response & User Feedback
-The backend responds with:
-```json
-{
-  "num_nodes": int,
-  "num_edges": int,
-  "is_dag": bool
-}
+```bash
+PORT=4000
+CLIENT_URL=http://localhost:5173
+MONGO_URI=mongodb://127.0.0.1:27017/abstractjs
+OPENAI_API_KEY=your_openai_api_key
+OPENAI_MODEL=gpt-4o-mini
+VITE_API_BASE_URL=http://localhost:4000
+```
+
+## Setup
+
+### 1. Install dependencies
+
+```bash
+cd server
+npm install
+
+cd ../client
+npm install
+```
+
+### 2. Start MongoDB
+
+Run a local MongoDB instance or update `MONGO_URI` to point at your managed cluster.
+
+### 3. Start the server
+
+```bash
+cd server
+npm run dev
+```
+
+### 4. Start the client
+
+```bash
+cd client
+npm run dev
+```
+
+### 5. Open the platform
+
+Visit `http://localhost:5173`.
+
+## Workflow Execution Semantics
+
+- Workflows are validated as DAGs before save and before execution
+- Nodes are executed in topological order
+- `INPUT` nodes read from runtime input payloads
+- `TRANSFORM` nodes reshape upstream data through templates or merge mode
+- `AI` nodes hydrate prompts from upstream results and call OpenAI
+- `OUTPUT` nodes package final results for the execution record
+
+## Verification Completed
+
+- `server`: `npm install`
+- `server`: recursive `node --check` on source files
+- `client`: `npm install`
+- `client`: `npm run build`
+
+## Notes
+
+- The server requires valid `MONGO_URI` and `OPENAI_API_KEY` values for full runtime behavior.
+- AI workflows will fail gracefully at execution time if the OpenAI API key is missing or invalid.
